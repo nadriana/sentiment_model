@@ -9,8 +9,8 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 import tensorflow as tf
 import re
 
-# input form
-app = FastAPI()
+# inicializo el servicio de FastAPI
+app = FastAPI(title='Sentiment model API')
 
 # esto es un ejemplo. No es parte del modelo
 #@app.get('/', response_class=HTMLResponse)
@@ -18,12 +18,12 @@ app = FastAPI()
 #    return f"<span> hello </span>"
 # ---
 
-@app.get('/')
+@app.get('/')  #path raiz
 def basic_view():
     return {"WELCOME": "GO TO /docs route, or /post or send post request to /predict "}
 
-
-@app.get('/predict', response_class=HTMLResponse)
+#tags se usa para /docs
+@app.get('/predict', tags=['predict'], response_class=HTMLResponse) #path  
 def take_inp():
     return '''
         <form method="post">
@@ -39,6 +39,7 @@ def take_inp():
 # El path tiene que ser el correcto, ie, donde están los archivos model.py y app.py
 # yo lo corrí en la terminal integrada en VSC porque ya tiene el path correcto
 # uvicorn app:app --reload
+
 
 
 # are essentially doing the same work for cleaning and preprocessing data,
@@ -63,7 +64,7 @@ def my_pipeline(text):
 # create a POST request at the "/predict" route so that the data posted 
 # using the form can be passed into our model, 
 # and we can make predictions.
-@app.post('/predict')
+@app.post('/predict', tags=['predict'])
 def predict(text:str = Form(...)):
     clean_text = my_pipeline(text) #clean, and preprocess the text through pipeline
     loaded_model = tf.keras.models.load_model('sentiment.h5') #load the saved model 
@@ -89,3 +90,18 @@ def predict(text:str = Form(...)):
 # ahí se agrega
 # __pycache__ #para que no suba esto
 # model.py #para que no suba el modelo ya que no es necesario, pero se puede dejar
+
+
+# Use Path parameters for a single resource and Query parameters for multiple resources in a GET request.
+#https://hub.packtpub.com/what-are-rest-verbs-and-status-codes-tutorial/
+
+#query params
+@app.get('/solution/')
+def solution_view(skip=0, limit=10): #: int = 0, limit: int = 10
+    return {"Solution": "solution ", "skip":skip, "limit":limit*3} 
+
+#path parameter
+@app.get('/gato/{nombre}')
+def gato_view(nombre: str):
+    return {"hola":nombre}
+
