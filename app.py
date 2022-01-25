@@ -85,6 +85,7 @@ def predict(text:str = Form(...)):
 
 # para parar usar control C (control no cmnd)
 
+
 #You can add a .gitignore file to ignore the files which you will not use:
 #en terminal: touch .gitignore
 # ahí se agrega
@@ -104,4 +105,3 @@ def solution_view(skip=0, limit=10): #: int = 0, limit: int = 10
 @app.get('/gato/{nombre}')
 def gato_view(nombre: str):
     return {"hola":nombre}
-
